@@ -10,6 +10,7 @@ import type { IntegerAmount } from '@actual-app/core/shared/util';
 import type { TransactionEntity } from '@actual-app/core/types/models';
 
 import { Search } from '#components/common/Search';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { PullToRefresh } from '#components/mobile/PullToRefresh';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
 import { DisplayPayeeProvider } from '#hooks/useDisplayPayee';
@@ -143,16 +144,18 @@ export function TransactionListWithBalances({
             },
           }}
         >
-          <TransactionList
-            isLoading={isLoading}
-            transactions={transactions}
-            showRunningBalances={showRunningBalances}
-            runningBalances={runningBalances}
-            isLoadingMore={isLoadingMore}
-            onLoadMore={onLoadMore}
-            onOpenTransaction={onOpenTransaction}
-            showMakeTransfer={showMakeTransfer}
-          />
+          <MobilePageBoundary>
+            <TransactionList
+              isLoading={isLoading}
+              transactions={transactions}
+              showRunningBalances={showRunningBalances}
+              runningBalances={runningBalances}
+              isLoadingMore={isLoadingMore}
+              onLoadMore={onLoadMore}
+              onOpenTransaction={onOpenTransaction}
+              showMakeTransfer={showMakeTransfer}
+            />
+          </MobilePageBoundary>
         </PullToRefresh>
       </SelectedProvider>
     </DisplayPayeeProvider>
