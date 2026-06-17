@@ -80,6 +80,7 @@ import {
   TapField,
   ToggleField,
 } from '#components/mobile/MobileForms';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { getPrettyPayee } from '#components/mobile/utils';
 import { MobilePageHeader, Page } from '#components/Page';
 import { createSingleTimeScheduleFromTransaction } from '#components/transactions/TransactionList';
@@ -1159,332 +1160,338 @@ const TransactionEditInner = memo<TransactionEditInnerProps>(
         }
         padding={0}
       >
-        <View
-          data-testid="transaction-form"
-          style={{ flexShrink: 0, marginTop: 20, marginBottom: 20 }}
-        >
+        <MobilePageBoundary>
           <View
-            style={{
-              alignItems: 'center',
-            }}
+            data-testid="transaction-form"
+            style={{ flexShrink: 0, marginTop: 20, marginBottom: 20 }}
           >
-            <FieldLabel title={t('Amount')} flush style={{ marginBottom: 0 }} />
-            <FocusableAmountInput
-              value={transaction.amount}
-              zeroSign="-"
-              focused={totalAmountFocused}
-              onFocus={onTotalAmountEdit}
-              onBlur={() => onClearActiveEdit()}
-              onUpdateAmount={onTotalAmountUpdate}
-              focusedStyle={{
-                width: 'auto',
-                padding: '5px',
-                paddingLeft: '20px',
-                paddingRight: '20px',
-                minWidth: '100%',
+            <View
+              style={{
+                alignItems: 'center',
               }}
-              textStyle={{ ...styles.veryLargeText, textAlign: 'center' }}
-            />
-          </View>
+            >
+              <FieldLabel
+                title={t('Amount')}
+                flush
+                style={{ marginBottom: 0 }}
+              />
+              <FocusableAmountInput
+                value={transaction.amount}
+                zeroSign="-"
+                focused={totalAmountFocused}
+                onFocus={onTotalAmountEdit}
+                onBlur={() => onClearActiveEdit()}
+                onUpdateAmount={onTotalAmountUpdate}
+                focusedStyle={{
+                  width: 'auto',
+                  padding: '5px',
+                  paddingLeft: '20px',
+                  paddingRight: '20px',
+                  minWidth: '100%',
+                }}
+                textStyle={{ ...styles.veryLargeText, textAlign: 'center' }}
+              />
+            </View>
 
-          <View>
-            <FieldLabel title={t('Payee')} />
-            <TapField
-              icon={<SvgUser width={17} height={17} />}
-              placeholder={t('Who did you pay?')}
-              textStyle={{
-                ...(transaction.is_parent && {
-                  fontStyle: 'italic',
-                  fontWeight: 300,
-                }),
-              }}
-              value={title}
-              isDisabled={
-                !!editingField &&
-                editingField !== getFieldName(transaction.id, 'payee')
-              }
-              onPress={() => onEditFieldInner(transaction.id, 'payee')}
-              data-testid="payee-field"
-              alwaysShowRightContent={
-                (!!nearestPayee || !!onRequestLocation) &&
-                !transaction.payee &&
-                !shouldShowSaveLocation
-              }
-              rightContent={
-                shouldShowSaveLocation ? (
-                  <Button
-                    variant="bare"
-                    onPress={onSaveLocation}
-                    style={{
-                      backgroundColor: theme.buttonNormalBackground,
-                      border: `1px solid ${theme.buttonNormalBorder}`,
-                      color: theme.buttonNormalText,
-                      fontSize: '11px',
-                      padding: '4px 8px',
-                      borderRadius: 3,
-                      height: 'auto',
-                      minHeight: 'auto',
-                    }}
-                  >
-                    <Trans>Save</Trans>
-                    <SvgLocation
-                      width={10}
-                      height={10}
-                      style={{ marginLeft: 4 }}
-                    />
-                  </Button>
-                ) : nearestPayee && !transaction.payee ? (
-                  <Button
-                    variant="bare"
-                    onPress={onSelectNearestPayee}
-                    style={{
-                      backgroundColor: theme.buttonNormalBackground,
-                      border: `1px solid ${theme.buttonNormalBorder}`,
-                      color: theme.buttonNormalText,
-                      fontSize: '11px',
-                      padding: '4px 8px',
-                      borderRadius: 3,
-                      height: 'auto',
-                      minHeight: 'auto',
-                    }}
-                  >
-                    <Trans>Nearby</Trans>
-                    <SvgLocation
-                      width={10}
-                      height={10}
-                      style={{ marginLeft: 4 }}
-                    />
-                  </Button>
-                ) : onRequestLocation && !transaction.payee ? (
-                  <Button
-                    variant="bare"
-                    onPress={onRequestLocation}
-                    style={{
-                      backgroundColor: theme.buttonNormalBackground,
-                      border: `1px solid ${theme.buttonNormalBorder}`,
-                      color: theme.buttonNormalText,
-                      fontSize: '11px',
-                      padding: '4px 8px',
-                      borderRadius: 3,
-                      height: 'auto',
-                      minHeight: 'auto',
-                    }}
-                  >
-                    <Trans>Request Location</Trans>
-                    <SvgLocation
-                      width={10}
-                      height={10}
-                      style={{ marginLeft: 4 }}
-                    />
-                  </Button>
-                ) : (
-                  dropdownChevron
-                )
-              }
-            />
-          </View>
-
-          {!transaction.is_parent && (
             <View>
-              <FieldLabel title={t('Category')} />
+              <FieldLabel title={t('Payee')} />
               <TapField
-                icon={<SvgTag width={17} height={17} />}
-                placeholder={t('Select a category')}
-                rightContent={dropdownChevron}
-                style={{
-                  ...((isOffBudget || isBudgetTransfer(transaction)) && {
+                icon={<SvgUser width={17} height={17} />}
+                placeholder={t('Who did you pay?')}
+                textStyle={{
+                  ...(transaction.is_parent && {
                     fontStyle: 'italic',
-                    color: theme.pageTextSubdued,
                     fontWeight: 300,
                   }),
                 }}
-                value={getCategory(transaction, isOffBudget)}
+                value={title}
                 isDisabled={
-                  (!!editingField &&
-                    editingField !==
-                      getFieldName(transaction.id, 'category')) ||
-                  isOffBudget ||
-                  isBudgetTransfer(transaction)
-                }
-                onPress={() => onEditFieldInner(transaction.id, 'category')}
-                data-testid="category-field"
-              />
-            </View>
-          )}
-
-          {childTransactions.map((childTrans, i, arr) => (
-            <ChildTransactionEdit
-              key={childTrans.id}
-              transaction={childTrans}
-              amountFocused={arr.findIndex(c => c.amount === 0) === i}
-              amountSign={childAmountSign}
-              ref={r => {
-                childTransactionElementRefMap.current = {
-                  ...childTransactionElementRefMap.current,
-                  [childTrans.id]: r,
-                };
-              }}
-              isOffBudget={isOffBudget}
-              getCategory={getCategory}
-              getPayee={getPayee}
-              getTransferAccount={getTransferAccount}
-              isBudgetTransfer={isBudgetTransfer}
-              onUpdate={onUpdateInner}
-              onEditField={onEditFieldInner}
-              onDelete={onDeleteInner}
-            />
-          ))}
-
-          {transaction.amount !== 0 && childTransactions.length === 0 && (
-            <View style={{ alignItems: 'center' }}>
-              <Button
-                variant="bare"
-                isDisabled={!!editingField}
-                style={{
-                  height: 40,
-                  borderWidth: 0,
-                  marginLeft: styles.mobileEditingPadding,
-                  marginRight: styles.mobileEditingPadding,
-                  marginTop: 10,
-                  backgroundColor: 'transparent',
-                }}
-                onPress={() => onSplit(transaction.id)}
-              >
-                <SvgSplit
-                  width={17}
-                  height={17}
-                  style={{ color: theme.formLabelText }}
-                />
-                <Text
-                  style={{
-                    marginLeft: 5,
-                    userSelect: 'none',
-                    color: theme.formLabelText,
-                  }}
-                >
-                  <Trans>Split</Trans>
-                </Text>
-              </Button>
-            </View>
-          )}
-
-          <View>
-            <FieldLabel title={t('Account')} />
-            <TapField
-              icon={<SvgWallet width={17} height={17} />}
-              placeholder={t('Select an account')}
-              rightContent={dropdownChevron}
-              isDisabled={
-                !!editingField &&
-                editingField !== getFieldName(transaction.id, 'account')
-              }
-              value={account?.name}
-              onPress={() => onEditFieldInner(transaction.id, 'account')}
-              data-testid="account-field"
-            />
-          </View>
-
-          <View style={{ flexDirection: 'row' }}>
-            <View style={{ flex: 1 }}>
-              <FieldLabel title={t('Date')} />
-              <InputField
-                type="date"
-                icon={<SvgCalendar width={17} height={17} />}
-                disabled={
                   !!editingField &&
-                  editingField !== getFieldName(transaction.id, 'date')
+                  editingField !== getFieldName(transaction.id, 'payee')
                 }
-                required
-                style={{
-                  color: theme.tableText,
-                  minWidth: '150px',
-                  appearance: 'none',
-                }}
-                defaultValue={dateDefaultValue}
-                onBlur={() => onClearActiveEdit()}
-                onFocus={() =>
-                  onRequestActiveEdit(getFieldName(transaction.id, 'date'))
+                onPress={() => onEditFieldInner(transaction.id, 'payee')}
+                data-testid="payee-field"
+                alwaysShowRightContent={
+                  (!!nearestPayee || !!onRequestLocation) &&
+                  !transaction.payee &&
+                  !shouldShowSaveLocation
                 }
-                onChange={event =>
-                  onUpdateInner(
-                    transaction,
-                    'date',
-                    formatDate(parseISO(event.target.value), dateFormat),
+                rightContent={
+                  shouldShowSaveLocation ? (
+                    <Button
+                      variant="bare"
+                      onPress={onSaveLocation}
+                      style={{
+                        backgroundColor: theme.buttonNormalBackground,
+                        border: `1px solid ${theme.buttonNormalBorder}`,
+                        color: theme.buttonNormalText,
+                        fontSize: '11px',
+                        padding: '4px 8px',
+                        borderRadius: 3,
+                        height: 'auto',
+                        minHeight: 'auto',
+                      }}
+                    >
+                      <Trans>Save</Trans>
+                      <SvgLocation
+                        width={10}
+                        height={10}
+                        style={{ marginLeft: 4 }}
+                      />
+                    </Button>
+                  ) : nearestPayee && !transaction.payee ? (
+                    <Button
+                      variant="bare"
+                      onPress={onSelectNearestPayee}
+                      style={{
+                        backgroundColor: theme.buttonNormalBackground,
+                        border: `1px solid ${theme.buttonNormalBorder}`,
+                        color: theme.buttonNormalText,
+                        fontSize: '11px',
+                        padding: '4px 8px',
+                        borderRadius: 3,
+                        height: 'auto',
+                        minHeight: 'auto',
+                      }}
+                    >
+                      <Trans>Nearby</Trans>
+                      <SvgLocation
+                        width={10}
+                        height={10}
+                        style={{ marginLeft: 4 }}
+                      />
+                    </Button>
+                  ) : onRequestLocation && !transaction.payee ? (
+                    <Button
+                      variant="bare"
+                      onPress={onRequestLocation}
+                      style={{
+                        backgroundColor: theme.buttonNormalBackground,
+                        border: `1px solid ${theme.buttonNormalBorder}`,
+                        color: theme.buttonNormalText,
+                        fontSize: '11px',
+                        padding: '4px 8px',
+                        borderRadius: 3,
+                        height: 'auto',
+                        minHeight: 'auto',
+                      }}
+                    >
+                      <Trans>Request Location</Trans>
+                      <SvgLocation
+                        width={10}
+                        height={10}
+                        style={{ marginLeft: 4 }}
+                      />
+                    </Button>
+                  ) : (
+                    dropdownChevron
                   )
                 }
               />
             </View>
-            {transaction.reconciled ? (
-              <View style={{ alignItems: 'center' }}>
-                <FieldLabel title={t('Reconciled')} />
-                <Toggle id="Reconciled" isOn isDisabled />
-              </View>
-            ) : (
-              <View style={{ alignItems: 'center' }}>
-                <FieldLabel title={t('Cleared')} />
-                <ToggleField
-                  id="cleared"
-                  isOn={!!transaction.cleared}
-                  onToggle={on => onUpdateInner(transaction, 'cleared', on)}
+
+            {!transaction.is_parent && (
+              <View>
+                <FieldLabel title={t('Category')} />
+                <TapField
+                  icon={<SvgTag width={17} height={17} />}
+                  placeholder={t('Select a category')}
+                  rightContent={dropdownChevron}
+                  style={{
+                    ...((isOffBudget || isBudgetTransfer(transaction)) && {
+                      fontStyle: 'italic',
+                      color: theme.pageTextSubdued,
+                      fontWeight: 300,
+                    }),
+                  }}
+                  value={getCategory(transaction, isOffBudget)}
+                  isDisabled={
+                    (!!editingField &&
+                      editingField !==
+                        getFieldName(transaction.id, 'category')) ||
+                    isOffBudget ||
+                    isBudgetTransfer(transaction)
+                  }
+                  onPress={() => onEditFieldInner(transaction.id, 'category')}
+                  data-testid="category-field"
                 />
               </View>
             )}
-          </View>
 
-          <View>
-            <FieldLabel title={t('Notes')} />
-            <InputField
-              ref={noteRef}
-              icon={<SvgNotesPaper width={17} height={17} />}
-              placeholder={t('Add a note (optional)')}
-              disabled={
-                !!editingField &&
-                editingField !== getFieldName(transaction.id, 'notes')
-              }
-              defaultValue={transaction.notes}
-              onFocus={() => {
-                onRequestActiveEdit(getFieldName(transaction.id, 'notes'));
-              }}
-              onBlur={() => onClearActiveEdit()}
-              onChange={event =>
-                onUpdateInner(transaction, 'notes', event.target.value)
-              }
-            />
-            <NoteTagAutocomplete inputRef={noteRef} />
-          </View>
-
-          {!isAdding && (
-            <View style={{ alignItems: 'center' }}>
-              <Button
-                variant="bare"
-                onPress={() => onDeleteInner(transaction.id)}
-                style={{
-                  height: 40,
-                  borderWidth: 0,
-                  marginLeft: styles.mobileEditingPadding,
-                  marginRight: styles.mobileEditingPadding,
-                  marginTop: 10,
-                  backgroundColor: 'transparent',
+            {childTransactions.map((childTrans, i, arr) => (
+              <ChildTransactionEdit
+                key={childTrans.id}
+                transaction={childTrans}
+                amountFocused={arr.findIndex(c => c.amount === 0) === i}
+                amountSign={childAmountSign}
+                ref={r => {
+                  childTransactionElementRefMap.current = {
+                    ...childTransactionElementRefMap.current,
+                    [childTrans.id]: r,
+                  };
                 }}
-              >
-                <SvgTrash
-                  width={17}
-                  height={17}
-                  style={{ color: theme.errorText }}
-                />
-                <Text
+                isOffBudget={isOffBudget}
+                getCategory={getCategory}
+                getPayee={getPayee}
+                getTransferAccount={getTransferAccount}
+                isBudgetTransfer={isBudgetTransfer}
+                onUpdate={onUpdateInner}
+                onEditField={onEditFieldInner}
+                onDelete={onDeleteInner}
+              />
+            ))}
+
+            {transaction.amount !== 0 && childTransactions.length === 0 && (
+              <View style={{ alignItems: 'center' }}>
+                <Button
+                  variant="bare"
+                  isDisabled={!!editingField}
                   style={{
-                    color: theme.errorText,
-                    marginLeft: 5,
-                    userSelect: 'none',
+                    height: 40,
+                    borderWidth: 0,
+                    marginLeft: styles.mobileEditingPadding,
+                    marginRight: styles.mobileEditingPadding,
+                    marginTop: 10,
+                    backgroundColor: 'transparent',
+                  }}
+                  onPress={() => onSplit(transaction.id)}
+                >
+                  <SvgSplit
+                    width={17}
+                    height={17}
+                    style={{ color: theme.formLabelText }}
+                  />
+                  <Text
+                    style={{
+                      marginLeft: 5,
+                      userSelect: 'none',
+                      color: theme.formLabelText,
+                    }}
+                  >
+                    <Trans>Split</Trans>
+                  </Text>
+                </Button>
+              </View>
+            )}
+
+            <View>
+              <FieldLabel title={t('Account')} />
+              <TapField
+                icon={<SvgWallet width={17} height={17} />}
+                placeholder={t('Select an account')}
+                rightContent={dropdownChevron}
+                isDisabled={
+                  !!editingField &&
+                  editingField !== getFieldName(transaction.id, 'account')
+                }
+                value={account?.name}
+                onPress={() => onEditFieldInner(transaction.id, 'account')}
+                data-testid="account-field"
+              />
+            </View>
+
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ flex: 1 }}>
+                <FieldLabel title={t('Date')} />
+                <InputField
+                  type="date"
+                  icon={<SvgCalendar width={17} height={17} />}
+                  disabled={
+                    !!editingField &&
+                    editingField !== getFieldName(transaction.id, 'date')
+                  }
+                  required
+                  style={{
+                    color: theme.tableText,
+                    minWidth: '150px',
+                    appearance: 'none',
+                  }}
+                  defaultValue={dateDefaultValue}
+                  onBlur={() => onClearActiveEdit()}
+                  onFocus={() =>
+                    onRequestActiveEdit(getFieldName(transaction.id, 'date'))
+                  }
+                  onChange={event =>
+                    onUpdateInner(
+                      transaction,
+                      'date',
+                      formatDate(parseISO(event.target.value), dateFormat),
+                    )
+                  }
+                />
+              </View>
+              {transaction.reconciled ? (
+                <View style={{ alignItems: 'center' }}>
+                  <FieldLabel title={t('Reconciled')} />
+                  <Toggle id="Reconciled" isOn isDisabled />
+                </View>
+              ) : (
+                <View style={{ alignItems: 'center' }}>
+                  <FieldLabel title={t('Cleared')} />
+                  <ToggleField
+                    id="cleared"
+                    isOn={!!transaction.cleared}
+                    onToggle={on => onUpdateInner(transaction, 'cleared', on)}
+                  />
+                </View>
+              )}
+            </View>
+
+            <View>
+              <FieldLabel title={t('Notes')} />
+              <InputField
+                ref={noteRef}
+                icon={<SvgNotesPaper width={17} height={17} />}
+                placeholder={t('Add a note (optional)')}
+                disabled={
+                  !!editingField &&
+                  editingField !== getFieldName(transaction.id, 'notes')
+                }
+                defaultValue={transaction.notes}
+                onFocus={() => {
+                  onRequestActiveEdit(getFieldName(transaction.id, 'notes'));
+                }}
+                onBlur={() => onClearActiveEdit()}
+                onChange={event =>
+                  onUpdateInner(transaction, 'notes', event.target.value)
+                }
+              />
+              <NoteTagAutocomplete inputRef={noteRef} />
+            </View>
+
+            {!isAdding && (
+              <View style={{ alignItems: 'center' }}>
+                <Button
+                  variant="bare"
+                  onPress={() => onDeleteInner(transaction.id)}
+                  style={{
+                    height: 40,
+                    borderWidth: 0,
+                    marginLeft: styles.mobileEditingPadding,
+                    marginRight: styles.mobileEditingPadding,
+                    marginTop: 10,
+                    backgroundColor: 'transparent',
                   }}
                 >
-                  <Trans>Delete transaction</Trans>
-                </Text>
-              </Button>
-            </View>
-          )}
-        </View>
+                  <SvgTrash
+                    width={17}
+                    height={17}
+                    style={{ color: theme.errorText }}
+                  />
+                  <Text
+                    style={{
+                      color: theme.errorText,
+                      marginLeft: 5,
+                      userSelect: 'none',
+                    }}
+                  >
+                    <Trans>Delete transaction</Trans>
+                  </Text>
+                </Button>
+              </View>
+            )}
+          </View>
+        </MobilePageBoundary>
       </Page>
     );
   },
