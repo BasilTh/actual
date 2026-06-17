@@ -27,6 +27,7 @@ import { useMoveAccountMutation, useSyncAndDownloadMutation } from '#accounts';
 import { isAccountFailedSync } from '#accounts/syncStatus';
 import { makeAmountFullStyle } from '#components/budget/util';
 import { MOBILE_NAV_HEIGHT } from '#components/mobile/MobileNavTabs';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { PullToRefresh } from '#components/mobile/PullToRefresh';
 import { MobilePageHeader, Page } from '#components/Page';
 import { CellValue, CellValueText } from '#components/spreadsheet/CellValue';
@@ -312,66 +313,68 @@ function AllAccountList({
       }
       padding={0}
     >
-      {accounts.length === 0 && <EmptyMessage />}
-      <PullToRefresh onRefresh={onSync}>
-        <View
-          aria-label={t('Account list')}
-          style={{ paddingBottom: MOBILE_NAV_HEIGHT }}
-        >
-          <AccountHeader
-            id="all"
-            name={t('All accounts')}
-            amount={getAllAccountsBalance()}
-          />
-          {onBudgetAccounts.length > 0 && (
+      <MobilePageBoundary>
+        {accounts.length === 0 && <EmptyMessage />}
+        <PullToRefresh onRefresh={onSync}>
+          <View
+            aria-label={t('Account list')}
+            style={{ paddingBottom: MOBILE_NAV_HEIGHT }}
+          >
             <AccountHeader
-              id="onbudget"
-              name={t('On budget')}
-              amount={getOnBudgetBalance()}
+              id="all"
+              name={t('All accounts')}
+              amount={getAllAccountsBalance()}
             />
-          )}
-          <AccountList
-            aria-label={t('On budget accounts')}
-            accounts={onBudgetAccounts}
-            getAccountBalance={getAccountBalance}
-            onOpenAccount={onOpenAccount}
-          />
-          {offBudgetAccounts.length > 0 && (
-            <AccountHeader
-              id="offbudget"
-              name={t('Off budget')}
-              amount={getOffBudgetBalance()}
-            />
-          )}
-          <AccountList
-            aria-label={t('Off budget accounts')}
-            accounts={offBudgetAccounts}
-            getAccountBalance={getAccountBalance}
-            onOpenAccount={onOpenAccount}
-          />
-          {closedAccounts.length > 0 && (
-            <AccountHeader
-              id="closed"
-              name={t('Closed')}
-              onPress={onToggleClosedAccounts}
-              amount={getClosedAccountsBalance()}
-              style={{ marginTop: 30 }}
-              showCheveronDown={showClosedAccounts}
-            />
-          )}
-          {showClosedAccounts && (
+            {onBudgetAccounts.length > 0 && (
+              <AccountHeader
+                id="onbudget"
+                name={t('On budget')}
+                amount={getOnBudgetBalance()}
+              />
+            )}
             <AccountList
-              aria-label={t('Closed accounts')}
-              accounts={closedAccounts}
+              aria-label={t('On budget accounts')}
+              accounts={onBudgetAccounts}
               getAccountBalance={getAccountBalance}
               onOpenAccount={onOpenAccount}
-              ref={el => {
-                if (el) closedAccountsRef.current = el;
-              }}
             />
-          )}
-        </View>
-      </PullToRefresh>
+            {offBudgetAccounts.length > 0 && (
+              <AccountHeader
+                id="offbudget"
+                name={t('Off budget')}
+                amount={getOffBudgetBalance()}
+              />
+            )}
+            <AccountList
+              aria-label={t('Off budget accounts')}
+              accounts={offBudgetAccounts}
+              getAccountBalance={getAccountBalance}
+              onOpenAccount={onOpenAccount}
+            />
+            {closedAccounts.length > 0 && (
+              <AccountHeader
+                id="closed"
+                name={t('Closed')}
+                onPress={onToggleClosedAccounts}
+                amount={getClosedAccountsBalance()}
+                style={{ marginTop: 30 }}
+                showCheveronDown={showClosedAccounts}
+              />
+            )}
+            {showClosedAccounts && (
+              <AccountList
+                aria-label={t('Closed accounts')}
+                accounts={closedAccounts}
+                getAccountBalance={getAccountBalance}
+                onOpenAccount={onOpenAccount}
+                ref={el => {
+                  if (el) closedAccountsRef.current = el;
+                }}
+              />
+            )}
+          </View>
+        </PullToRefresh>
+      </MobilePageBoundary>
     </Page>
   );
 }
