@@ -12,6 +12,7 @@ import type { PayeeEntity } from '@actual-app/core/types/models';
 
 import { MobileBackButton } from '#components/mobile/MobileBackButton';
 import { InputField } from '#components/mobile/MobileForms';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { MobilePageHeader, Page } from '#components/Page';
 import { useNavigate } from '#hooks/useNavigate';
 import { usePayees } from '#hooks/usePayees';
@@ -139,13 +140,15 @@ export function MobilePayeeEditPage() {
         </View>
       }
     >
-      <View style={{ paddingTop: 20 }}>
-        <InputField
-          placeholder={t('Payee name')}
-          value={editedPayeeName}
-          onChangeValue={setEditedPayeeName}
-        />
-      </View>
+      <MobilePageBoundary>
+        <View style={{ paddingTop: 20 }}>
+          <InputField
+            placeholder={t('Payee name')}
+            value={editedPayeeName}
+            onChangeValue={setEditedPayeeName}
+          />
+        </View>
+      </MobilePageBoundary>
     </Page>
   );
 }

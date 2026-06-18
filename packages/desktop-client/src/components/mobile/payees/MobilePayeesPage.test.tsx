@@ -1,4 +1,5 @@
 import React from 'react';
+import { MemoryRouter } from 'react-router';
 
 import type { PayeeEntity } from '@actual-app/core/types/models';
 import { render, screen } from '@testing-library/react';
@@ -55,7 +56,9 @@ describe('MobilePayeesPage', () => {
   const renderPayeesPage = () => {
     return render(
       <TestProviders queryClient={queryClient}>
-        <MobilePayeesPage />
+        <MemoryRouter>
+          <MobilePayeesPage />
+        </MemoryRouter>
       </TestProviders>,
     );
   };

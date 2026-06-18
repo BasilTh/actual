@@ -9,6 +9,7 @@ import { getNormalisedString } from '@actual-app/core/shared/normalisation';
 import type { PayeeEntity, RuleEntity } from '@actual-app/core/types/models';
 
 import { Search } from '#components/common/Search';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { MobilePageHeader, Page } from '#components/Page';
 import { useNavigate } from '#hooks/useNavigate';
 import { usePayeeRuleCounts } from '#hooks/usePayeeRuleCounts';
@@ -134,15 +135,17 @@ export function MobilePayeesPage() {
           }}
         />
       </View>
-      <PayeesList
-        payees={filteredPayees}
-        ruleCounts={ruleCounts}
-        isRuleCountsLoading={isRuleCountsLoading}
-        isLoading={isPending}
-        onPayeePress={handlePayeePress}
-        onPayeeDelete={handlePayeeDelete}
-        onPayeeRuleAction={handlePayeeRuleAction}
-      />
+      <MobilePageBoundary>
+        <PayeesList
+          payees={filteredPayees}
+          ruleCounts={ruleCounts}
+          isRuleCountsLoading={isRuleCountsLoading}
+          isLoading={isPending}
+          onPayeePress={handlePayeePress}
+          onPayeeDelete={handlePayeeDelete}
+          onPayeeRuleAction={handlePayeeRuleAction}
+        />
+      </MobilePageBoundary>
     </Page>
   );
 }
