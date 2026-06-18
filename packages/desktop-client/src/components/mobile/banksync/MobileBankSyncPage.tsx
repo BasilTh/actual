@@ -14,6 +14,7 @@ import {
 } from '#components/banksync/bankSyncUtils';
 import type { GroupedBankSyncAccounts } from '#components/banksync/bankSyncUtils';
 import { Search } from '#components/common/Search';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { MobilePageHeader, Page } from '#components/Page';
 import { useAccounts } from '#hooks/useAccounts';
 import { useNavigate } from '#hooks/useNavigate';
@@ -116,35 +117,37 @@ export function MobileBankSyncPage() {
         />
       </View>
 
-      {openAccounts.length === 0 ? (
-        <View
-          style={{
-            flex: 1,
-            alignItems: 'center',
-            justifyContent: 'center',
-            paddingHorizontal: 20,
-            paddingTop: 40,
-          }}
-        >
-          <Text
+      <MobilePageBoundary>
+        {openAccounts.length === 0 ? (
+          <View
             style={{
-              fontSize: 16,
-              color: theme.pageTextSubdued,
-              textAlign: 'center',
+              flex: 1,
+              alignItems: 'center',
+              justifyContent: 'center',
+              paddingHorizontal: 20,
+              paddingTop: 40,
             }}
           >
-            <Trans>
-              To use the bank syncing features, you must first add an account.
-            </Trans>
-          </Text>
-        </View>
-      ) : (
-        <BankSyncAccountsList
-          groupedAccounts={filteredGroupedAccounts}
-          syncSourceReadable={syncSourceReadable}
-          onAction={onAction}
-        />
-      )}
+            <Text
+              style={{
+                fontSize: 16,
+                color: theme.pageTextSubdued,
+                textAlign: 'center',
+              }}
+            >
+              <Trans>
+                To use the bank syncing features, you must first add an account.
+              </Trans>
+            </Text>
+          </View>
+        ) : (
+          <BankSyncAccountsList
+            groupedAccounts={filteredGroupedAccounts}
+            syncSourceReadable={syncSourceReadable}
+            onAction={onAction}
+          />
+        )}
+      </MobilePageBoundary>
     </Page>
   );
 }
