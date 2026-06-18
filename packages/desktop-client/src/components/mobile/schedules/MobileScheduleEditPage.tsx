@@ -17,6 +17,7 @@ import type {
 } from '@actual-app/core/types/models';
 
 import { MobileBackButton } from '#components/mobile/MobileBackButton';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { MobilePageHeader, Page } from '#components/Page';
 import { updateScheduleConditions } from '#components/schedules/schedule-edit-utils';
 import { ScheduleEditForm } from '#components/schedules/ScheduleEditForm';
@@ -256,23 +257,25 @@ export function MobileScheduleEditPage() {
       }
       padding={0}
     >
-      <ScheduleEditForm
-        fields={state.fields}
-        dispatch={dispatch}
-        upcomingDates={state.upcomingDates}
-        repeats={repeats}
-        schedule={schedule}
-        adding={adding}
-        isCustom={state.isCustom ?? false}
-        onEditRule={onEditRule}
-        transactions={state.transactions}
-        transactionsMode={state.transactionsMode}
-        error={state.error}
-        selectedInst={selectedInst}
-        onSwitchTransactions={onSwitchTransactions}
-        onLinkTransactions={onLinkTransactions}
-        onUnlinkTransactions={onUnlinkTransactions}
-      />
+      <MobilePageBoundary>
+        <ScheduleEditForm
+          fields={state.fields}
+          dispatch={dispatch}
+          upcomingDates={state.upcomingDates}
+          repeats={repeats}
+          schedule={schedule}
+          adding={adding}
+          isCustom={state.isCustom ?? false}
+          onEditRule={onEditRule}
+          transactions={state.transactions}
+          transactionsMode={state.transactionsMode}
+          error={state.error}
+          selectedInst={selectedInst}
+          onSwitchTransactions={onSwitchTransactions}
+          onLinkTransactions={onLinkTransactions}
+          onUnlinkTransactions={onUnlinkTransactions}
+        />
+      </MobilePageBoundary>
     </Page>
   );
 }

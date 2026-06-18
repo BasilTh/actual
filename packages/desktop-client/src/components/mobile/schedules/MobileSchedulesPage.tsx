@@ -13,6 +13,7 @@ import { getScheduledAmount } from '@actual-app/core/shared/schedules';
 import type { ScheduleEntity } from '@actual-app/core/types/models';
 
 import { Search } from '#components/common/Search';
+import { MobilePageBoundary } from '#components/mobile/MobilePageBoundary';
 import { MobilePageHeader, Page } from '#components/Page';
 import { useAccounts } from '#hooks/useAccounts';
 import { useDateFormat } from '#hooks/useDateFormat';
@@ -154,16 +155,18 @@ export function MobileSchedulesPage() {
           }}
         />
       </View>
-      <SchedulesList
-        schedules={filteredSchedules}
-        isLoading={isSchedulesLoading}
-        statuses={statuses}
-        onSchedulePress={handleSchedulePress}
-        onScheduleDelete={handleScheduleDelete}
-        hasCompletedSchedules={hasCompletedSchedules}
-        showCompleted={showCompleted}
-        onShowCompleted={() => setShowCompleted(true)}
-      />
+      <MobilePageBoundary>
+        <SchedulesList
+          schedules={filteredSchedules}
+          isLoading={isSchedulesLoading}
+          statuses={statuses}
+          onSchedulePress={handleSchedulePress}
+          onScheduleDelete={handleScheduleDelete}
+          hasCompletedSchedules={hasCompletedSchedules}
+          showCompleted={showCompleted}
+          onShowCompleted={() => setShowCompleted(true)}
+        />
+      </MobilePageBoundary>
     </Page>
   );
 }
